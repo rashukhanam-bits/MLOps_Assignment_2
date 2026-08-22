@@ -1,0 +1,57 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/data/preprocess.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 3ab70657c819f03d532454f827afdcf7.dir
+      size: 848866410
+      nfiles: 24998
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: 394132895b0989507afbd7e9db3b704d
+      size: 2444
+    params:
+      params.yaml:
+        preprocess.image_size: 224
+        preprocess.seed: 42
+        preprocess.test_split: 0.1
+        preprocess.train_split: 0.8
+        preprocess.val_split: 0.1
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 0a86e3f7f19c60ab91b32035fb2dc567.dir
+      size: 513671086
+      nfiles: 24998
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 0a86e3f7f19c60ab91b32035fb2dc567.dir
+      size: 513671086
+      nfiles: 24998
+    - path: src/models/model.py
+      hash: md5
+      md5: df4c796488d76eba204583a56042d982
+      size: 1179
+    - path: src/models/train.py
+      hash: md5
+      md5: a06095bf3516802ce53e0f99d76c5b8c
+      size: 5289
+    params:
+      params.yaml:
+        train.batch_size: 32
+        train.epochs: 10
+        train.learning_rate: 0.001
+    outs:
+    - path: models/cats_dogs_cnn.h5
+      hash: md5
+      md5: 9ac755ac0e68953613ed092bb2e78844
+      size: 3155680
+    - path: reports/metrics.json
+      hash: md5
+      md5: 27d2385a57686c33bbf3f9583222a0bc
+      size: 171
