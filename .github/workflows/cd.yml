@@ -1,0 +1,61 @@
+name: CD - Deploy & Smoke Test
+
+on:
+  workflow_run:
+    workflows: ["CI - Test, Build & Push Image"]
+    types: [completed]
+    branches: [main]
+
+env:
+  IMAGE_NAME: cats-dogs-api
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ---- Option A: Docker Compose deploy (default for this workflow) ----
+      - name: Pull latest image
+        run: |
+          docker pull docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy with docker compose
+        run: |
+          export IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker compose up -d --no-build
+
+      - name: Wait for service to become healthy
+        run: |
+          for i in {1..20}; do
+            if curl -fs http://localhost:8000/health; then echo "up"; break; fi
+            sleep 3
+          done
+
+      # ---- Smoke tests: fail the pipeline if these fail ----
+      - name: Run smoke tests
+        run: bash scripts/smoke_test.sh http://localhost:8000
+
+      - name: Tear down on failure
+        if: failure()
+        run: docker compose down
+
+      # ---- Option B: Kubernetes deploy (uncomment if targeting k8s instead) ----
+      # - name: Set up kubectl
+      #   uses: azure/setup-kubectl@v4
+      # - name: Configure kubeconfig
+      #   run: echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > kubeconfig.yaml
+      # - name: Update image and roll out
+      #   run: |
+      #     export KUBECONFIG=kubeconfig.yaml
+      #     kubectl set image deployment/cats-dogs-api \
+      #       cats-dogs-api=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      #     kubectl rollout status deployment/cats-dogs-api --timeout=120s
+      # - name: Port-forward and smoke test
+      #   run: |
+      #     export KUBECONFIG=kubeconfig.yaml
+      #     kubectl port-forward svc/cats-dogs-api 8000:80 &
+      #     sleep 5
+      #     bash scripts/smoke_test.sh http://localhost:8000
