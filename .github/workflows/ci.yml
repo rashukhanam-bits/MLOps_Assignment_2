@@ -51,13 +51,18 @@ jobs:
       - name: Smoke-test the built image
         run: |
           docker run -d -p 8000:8000 --name ci-smoke ${{ env.IMAGE_NAME }}:test
-          for i in {1..15}; do
-            if curl -fs http://localhost:8000/health; then echo "healthy"; break; fi
-            echo "waiting for service..."; sleep 3
+          HEALTHY=0
+          for i in {1..20}; do
+            if curl -fs http://localhost:8000/health; then echo "healthy"; HEALTHY=1; break; fi
+            echo "waiting for service... ($i)"; sleep 5
           done
-          curl -fs http://localhost:8000/health
+          echo "---- container logs ----"
           docker logs ci-smoke
           docker stop ci-smoke
+          if [ "$HEALTHY" -ne 1 ]; then
+            echo "Container never became healthy"
+            exit 1
+          fi
 
       - name: Push image to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
