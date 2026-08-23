@@ -34,6 +34,12 @@ jobs:
             sleep 3
           done
 
+      - name: Install smoke-test dependencies
+        run: pip install pillow
+
+      - name: Run smoke tests
+        run: bash scripts/smoke_test.sh http://localhost:8000
+
       # ---- Smoke tests: fail the pipeline if these fail ----
       - name: Run smoke tests
         run: bash scripts/smoke_test.sh http://localhost:8000
