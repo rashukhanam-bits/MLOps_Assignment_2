@@ -23,7 +23,7 @@ import keras
 from src.models.model import build_model
 
 PROCESSED_DIR = Path("data/processed")
-MODEL_OUT = Path("models/cats_dogs_cnn.h5")
+MODEL_OUT = Path("models/cats_dogs_cnn.keras")
 REPORTS_DIR = Path("reports")
 
 

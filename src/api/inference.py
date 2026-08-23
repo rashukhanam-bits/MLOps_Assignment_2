@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn.h5"))
+MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn.keras"))
 CLASS_NAMES = ["cats", "dogs"]  # index 0 -> cats, index 1 -> dogs
 IMAGE_SIZE = 224
 

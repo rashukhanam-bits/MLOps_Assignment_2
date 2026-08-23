@@ -16,7 +16,7 @@ COPY src/ ./src/
 COPY monitoring/ ./monitoring/
 COPY models/ ./models/
 
-ENV MODEL_PATH=/app/models/cats_dogs_cnn.h5
+ENV MODEL_PATH=/app/models/cats_dogs_cnn.keras
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
