@@ -105,7 +105,7 @@ dvc push
 ## Task 2 and Task 3 - Model Building and Experiment Tracking
 
 ```bash
-mlflow ui --port 5000 &
+mlflow ui --port 5000 
 ```
 
 Train:

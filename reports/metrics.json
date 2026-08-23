@@ -1,6 +1,6 @@
 {
-  "test_loss": 0.4040863811969757,
-  "test_accuracy": 0.8337330222129822,
-  "final_train_accuracy": 0.8047804832458496,
-  "final_val_accuracy": 0.8034427762031555
+  "test_loss": 0.3828739523887634,
+  "test_accuracy": 0.8369304537773132,
+  "final_train_accuracy": 0.8011301159858704,
+  "final_val_accuracy": 0.8206565380096436
 }
