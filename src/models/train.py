@@ -138,9 +138,8 @@ def main():
         mlflow.log_artifact(str(cm_path))
         mlflow.log_artifact(str(loss_path))
 
-        model.save(MODEL_OUT)
+        model.save_weights(MODEL_OUT)
         mlflow.log_artifact(str(MODEL_OUT))
-        mlflow.keras.log_model(model, "model")
 
         metrics_summary = {
             "test_loss": float(test_loss),

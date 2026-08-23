@@ -9,23 +9,23 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn.keras"))
+MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn.weights.h5"))
 CLASS_NAMES = ["cats", "dogs"]  # index 0 -> cats, index 1 -> dogs
 IMAGE_SIZE = 224
 
 _model = None  # lazy-loaded singleton
 
-
 def get_model():
     global _model
     if _model is None:
-        from tensorflow import keras  # imported lazily to keep import time low for tests
-
         if not MODEL_PATH.exists():
             raise FileNotFoundError(
                 f"Model not found at {MODEL_PATH}. Train it first with src/models/train.py"
             )
-        _model = keras.models.load_model(MODEL_PATH)
+        from src.models.model import build_model
+
+        _model = build_model()
+        _model.load_weights(MODEL_PATH)
     return _model
 
 

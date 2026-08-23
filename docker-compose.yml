@@ -7,7 +7,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MODEL_PATH=/app/models/cats_dogs_cnn.keras
+      - MODEL_PATH=/app/models/cats_dogs_cnn.weights.h5
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s

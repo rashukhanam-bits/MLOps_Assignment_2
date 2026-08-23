@@ -21,7 +21,7 @@ spec:
             - containerPort: 8000
           env:
             - name: MODEL_PATH
-              value: /app/models/cats_dogs_cnn.keras
+              value: /app/models/cats_dogs_cnn.weights.h5
           readinessProbe:
             httpGet:
               path: /health

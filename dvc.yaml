@@ -24,7 +24,7 @@ stages:
       - train.batch_size
       - train.learning_rate
     outs:
-      - models/cats_dogs_cnn.keras
+      - models/cats_dogs_cnn.weights.h5
     metrics:
       - reports/metrics.json:
           cache: false
