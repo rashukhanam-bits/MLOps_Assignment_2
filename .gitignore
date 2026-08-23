@@ -10,4 +10,4 @@ reports/*.csv
 .DS_Store
 *.log
 .pytest_cache/
-models/*.weights.h5
+models/*_weights.pkl

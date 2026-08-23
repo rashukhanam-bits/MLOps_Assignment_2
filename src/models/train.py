@@ -23,7 +23,7 @@ import keras
 from src.models.model import build_model
 
 PROCESSED_DIR = Path("data/processed")
-MODEL_OUT = Path("models/cats_dogs_cnn.keras")
+MODEL_OUT = Path("models/cats_dogs_cnn_weights.pkl")
 REPORTS_DIR = Path("reports")
 
 
@@ -138,7 +138,9 @@ def main():
         mlflow.log_artifact(str(cm_path))
         mlflow.log_artifact(str(loss_path))
 
-        model.save_weights(MODEL_OUT)
+        import pickle
+        with open(MODEL_OUT, "wb") as f:
+            pickle.dump(model.get_weights(), f)
         mlflow.log_artifact(str(MODEL_OUT))
 
         metrics_summary = {

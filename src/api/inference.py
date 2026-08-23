@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn.weights.h5"))
+MODEL_PATH = Path(os.environ.get("MODEL_PATH", "models/cats_dogs_cnn_weights.pkl"))
 CLASS_NAMES = ["cats", "dogs"]  # index 0 -> cats, index 1 -> dogs
 IMAGE_SIZE = 224
 
@@ -22,10 +22,13 @@ def get_model():
             raise FileNotFoundError(
                 f"Model not found at {MODEL_PATH}. Train it first with src/models/train.py"
             )
+        import pickle
         from src.models.model import build_model
 
         _model = build_model()
-        _model.load_weights(MODEL_PATH)
+        with open(MODEL_PATH, "rb") as f:
+            weights = pickle.load(f)
+        _model.set_weights(weights)
     return _model
 
 
